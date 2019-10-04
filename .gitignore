@@ -1,0 +1,15 @@
+ComputerGraphics TermProject/Debug/
+ComputerGraphics TermProject/ComputerGraphics TermProjcet/Debug/
+ComputerGraphics TermProject/.vs/
+
+*.vcxproj
+*.filters
+*.user
+*.obj
+*.tlog
+*.suo
+*.db
+*.ipch
+*.log
+*.idb
+*.pdb
