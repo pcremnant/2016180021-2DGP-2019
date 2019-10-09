@@ -35,6 +35,10 @@ def handle_events():
         elif event.type == SDL_MOUSEBUTTONDOWN:
             nArriveX = event.x + 17
             nArriveY = 600 - event.y - 23
+            if nArriveX > nCharacterX:
+                nFrameMode = 1
+            else:
+                nFrameMode = 0
     # if event.key
 
     pass
