@@ -63,6 +63,7 @@ t = i / 100
 p1 = (nCharacterX, nCharacterY)
 p2 = (nArriveX, nArriveY)
 
+
 while running:
     clear_canvas()
     # imgBackGround.draw(100, 100)
