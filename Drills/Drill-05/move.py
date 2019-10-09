@@ -6,6 +6,8 @@ nFrameMode = 3
 nFrame = 0
 nMouseX = 0
 nMouseY = 0
+nCharacterX = 100
+nCharacterY = 100
 
 
 def handle_events():
@@ -40,6 +42,7 @@ imgCharacter = load_image("animation_sheet.png")
 # frame 1 -> right run
 # frame 2 -> left wait
 # frame 3 -> right wait
+# 800 x 400
 
 while running:
     clear_canvas()
@@ -48,7 +51,8 @@ while running:
                             KPU_WIDTH / 2, KPU_HEIGHT / 2, 1280, 1024)
 
     imgHandArrow.draw(nMouseX + 17, 600 - nMouseY - 23)
-
+    imgCharacter.clip_draw(nFrame * 100, nFrameMode * 100,
+                           100, 100, nCharacterX, nCharacterY)
     update_canvas()
     handle_events()
     nFrame = (nFrame + 1) % 8
