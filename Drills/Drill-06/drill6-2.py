@@ -4,12 +4,6 @@ KPU_WIDTH, KPU_HEIGHT = 1280, 1024
 
 nFrameMode = 3
 nFrame = 0
-nMouseX = 0
-nMouseY = 0
-nCharacterX = 100
-nCharacterY = 100
-nArriveX = 100
-nArriveY = 100
 
 bArrived = False
 bSetPoint = False
@@ -17,11 +11,6 @@ bSetPoint = False
 
 def handle_events():
     global running
-    global nFrameMode
-    global nMouseX
-    global nMouseY
-    global nArriveX
-    global nArriveY
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -29,16 +18,6 @@ def handle_events():
         elif event.type == SDL_KEYDOWN:
             if event.key == SDLK_ESCAPE:
                 running = False
-        elif event.type == SDL_MOUSEMOTION:
-            nMouseX = event.x + 17
-            nMouseY = 600 - event.y - 23
-        elif event.type == SDL_MOUSEBUTTONDOWN:
-            nArriveX = event.x + 17
-            nArriveY = 600 - event.y - 23
-            if nArriveX > nCharacterX:
-                nFrameMode = 1
-            else:
-                nFrameMode = 0
     # if event.key
 
     pass
@@ -46,7 +25,7 @@ def handle_events():
 
 running = True
 
-open_canvas()
+open_canvas(KPU_WIDTH, KPU_HEIGHT)
 imgBackGround = load_image("KPU_GROUND.png")
 imgCharacter = load_image("animation_sheet.png")
 
@@ -56,12 +35,23 @@ imgCharacter = load_image("animation_sheet.png")
 # frame 3 -> right wait
 # 800 x 400
 
-i = 0
-t = i / 100
+points = [(-300, 200), (400, 350), (300, -300), (-200, -200)]
 
-p1 = (nCharacterX, nCharacterY)
-p2 = (nArriveX, nArriveY)
 
+def draw_curve_points():
+    global points
+
+    for j in range(0, 4, 1):
+        for i in range(0, 100, 2):
+            t = i / 100
+            x = ((-t ** 3 + 2 * t ** 2 - t) * points[j % 4][0] + (3 * t ** 3 - 5 * t ** 2 + 2) * points[(j + 1) % 4][
+                0] + (-3 * t ** 3 + 4 * t ** 2 + t) * points[(j + 2) % 4][0] + (t ** 3 - t ** 2) *
+                 points[(j + 3) % 4][0]) / 2
+            y = ((-t ** 3 + 2 * t ** 2 - t) * points[j % 4][1] + (3 * t ** 3 - 5 * t ** 2 + 2) * points[(j + 1) % 4][
+                1] + (-3 * t ** 3 + 4 * t ** 2 + t) * points[(j + 2) % 4][1] + (t ** 3 - t ** 2) * points[(j + 3) % 4][
+                     1]) / 2
+            draw_point((x, y))
+        draw_point(points[(j + 2) % 4])
 
 while running:
     clear_canvas()
@@ -70,39 +60,6 @@ while running:
     imgBackGround.clip_draw(0, 0, KPU_WIDTH, KPU_HEIGHT,
                             KPU_WIDTH / 2, KPU_HEIGHT / 2, 1280, 1024)
 
-    if bArrived:
-        imgCharacter.clip_draw(nFrame * 100, nFrameMode * 100,
-                               100, 100, nCharacterX, nCharacterY)
-
-    if nCharacterX == nArriveX and nCharacterY == nArriveY:
-        bArrived = True
-    else:
-        bArrived = False
-
-    if bArrived:
-        if nFrameMode == 0:
-            nFrameMode = 2
-        elif nFrameMode == 1:
-            nFrameMode = 3
-    elif not bSetPoint:
-        bSetPoint = True
-        p1 = (nCharacterX, nCharacterY)
-        p2 = (nArriveX, nArriveY)
-    elif bSetPoint:
-        if i < 100:
-            i = i + 1
-            t = i / 100
-            x = (1 - t) * p1[0] + t * p2[0]
-            y = (1 - t) * p1[1] + t * p2[1]
-            imgCharacter.clip_draw(nFrame * 100, nFrameMode * 100,
-                                   100, 100, x, y)
-        elif i == 100 or t == 1:
-            nCharacterX = nArriveX
-            nCharacterY = nArriveY
-            i = 0
-            t = 0
-            bArrived = True
-            bSetPoint = False
     update_canvas()
     handle_events()
     nFrame = (nFrame + 1) % 8
