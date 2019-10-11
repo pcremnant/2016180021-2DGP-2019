@@ -25,7 +25,7 @@ def handle_events():
 
 running = True
 
-open_canvas(KPU_WIDTH, KPU_HEIGHT)
+open_canvas(KPU_WIDTH, 600)
 imgBackGround = load_image("KPU_GROUND.png")
 imgCharacter = load_image("animation_sheet.png")
 
@@ -35,11 +35,11 @@ imgCharacter = load_image("animation_sheet.png")
 # frame 3 -> right wait
 # 800 x 400
 
-pointNumber = 4
-points = [(-300, 200), (400, 350), (300, -300), (-200, -200)]
+pointNumber = 10
+points = [(0, 500), (600, 600), (600, 0), (100, 100)]
 
 
-def draw_curve_points():
+def draw_curve_player():
     global points
     global nFrameMode
     global nFrame
@@ -53,12 +53,19 @@ def draw_curve_points():
             y = ((-t ** 3 + 2 * t ** 2 - t) * points[j % pointNumber][1] + (3 * t ** 3 - 5 * t ** 2 + 2) * points[(j + 1) % pointNumber][
                 1] + (-3 * t ** 3 + 4 * t ** 2 + t) * points[(j + 2) % pointNumber][1] + (t ** 3 - t ** 2) * points[(j + 3) % pointNumber][
                      1]) / 2
-            if points[(j+1)%pointNumber][0]<points[(j+2)%pointNumber][0]:
+
+            if points[(j+1) % pointNumber][0] < points[(j+2) % pointNumber][0]:
                 nFrameMode = 0
             else :
                 nFrameMode = 1
-            nFrame = (nFrame + 1) % 8
+            clear_canvas()
+            imgBackGround.clip_draw(0, 0, KPU_WIDTH, KPU_HEIGHT,
+                                    KPU_WIDTH / 2, KPU_HEIGHT / 2, 1280, 1024)
+            imgCharacter.clip_draw(nFrame * 100, nFrameMode * 100, 100, 100, x, y)
             update_canvas()
+            handle_events()
+            nFrame = (nFrame + 1) % 8
+            delay(0.01)
 
 
 while running:
@@ -67,10 +74,8 @@ while running:
 
     imgBackGround.clip_draw(0, 0, KPU_WIDTH, KPU_HEIGHT,
                             KPU_WIDTH / 2, KPU_HEIGHT / 2, 1280, 1024)
-
     update_canvas()
-    handle_events()
-    nFrame = (nFrame + 1) % 8
+    draw_curve_player()
 
     delay(0.01)
 
