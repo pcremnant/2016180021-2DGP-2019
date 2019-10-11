@@ -35,23 +35,31 @@ imgCharacter = load_image("animation_sheet.png")
 # frame 3 -> right wait
 # 800 x 400
 
+pointNumber = 4
 points = [(-300, 200), (400, 350), (300, -300), (-200, -200)]
 
 
 def draw_curve_points():
     global points
+    global nFrameMode
+    global nFrame
 
-    for j in range(0, 4, 1):
+    for j in range(0, pointNumber, 1):
         for i in range(0, 100, 2):
             t = i / 100
-            x = ((-t ** 3 + 2 * t ** 2 - t) * points[j % 4][0] + (3 * t ** 3 - 5 * t ** 2 + 2) * points[(j + 1) % 4][
-                0] + (-3 * t ** 3 + 4 * t ** 2 + t) * points[(j + 2) % 4][0] + (t ** 3 - t ** 2) *
-                 points[(j + 3) % 4][0]) / 2
-            y = ((-t ** 3 + 2 * t ** 2 - t) * points[j % 4][1] + (3 * t ** 3 - 5 * t ** 2 + 2) * points[(j + 1) % 4][
-                1] + (-3 * t ** 3 + 4 * t ** 2 + t) * points[(j + 2) % 4][1] + (t ** 3 - t ** 2) * points[(j + 3) % 4][
+            x = ((-t ** 3 + 2 * t ** 2 - t) * points[j % pointNumber][0] + (3 * t ** 3 - 5 * t ** 2 + 2) * points[(j + 1) % pointNumber][
+                0] + (-3 * t ** 3 + 4 * t ** 2 + t) * points[(j + 2) % pointNumber][0] + (t ** 3 - t ** 2) *
+                 points[(j + 3) % pointNumber][0]) / 2
+            y = ((-t ** 3 + 2 * t ** 2 - t) * points[j % pointNumber][1] + (3 * t ** 3 - 5 * t ** 2 + 2) * points[(j + 1) % pointNumber][
+                1] + (-3 * t ** 3 + 4 * t ** 2 + t) * points[(j + 2) % pointNumber][1] + (t ** 3 - t ** 2) * points[(j + 3) % pointNumber][
                      1]) / 2
-            draw_point((x, y))
-        draw_point(points[(j + 2) % 4])
+            if points[(j+1)%pointNumber][0]<points[(j+2)%pointNumber][0]:
+                nFrameMode = 0
+            else :
+                nFrameMode = 1
+            nFrame = (nFrame + 1) % 8
+            update_canvas()
+
 
 while running:
     clear_canvas()
