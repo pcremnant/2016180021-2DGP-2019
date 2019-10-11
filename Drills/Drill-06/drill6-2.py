@@ -1,4 +1,5 @@
 from pico2d import *
+import random
 
 KPU_WIDTH, KPU_HEIGHT = 1280, 1024
 
@@ -36,7 +37,17 @@ imgCharacter = load_image("animation_sheet.png")
 # 800 x 400
 
 pointNumber = 10
-points = [(0, 500), (600, 600), (600, 0), (100, 100)]
+
+points = [(random.randint(0,1280), random.randint(0,600)),
+          (random.randint(0,1280), random.randint(0,600)),
+          (random.randint(0,1280), random.randint(0,600)),
+          (random.randint(0,1280), random.randint(0,600)),
+          (random.randint(0,1280), random.randint(0,600)),
+          (random.randint(0,1280), random.randint(0,600)),
+          (random.randint(0,1280), random.randint(0,600)),
+          (random.randint(0,1280), random.randint(0,600)),
+          (random.randint(0,1280), random.randint(0,600)),
+          (random.randint(0,1280), random.randint(0,600))]
 
 
 def draw_curve_player():
@@ -54,7 +65,7 @@ def draw_curve_player():
                 1] + (-3 * t ** 3 + 4 * t ** 2 + t) * points[(j + 2) % pointNumber][1] + (t ** 3 - t ** 2) * points[(j + 3) % pointNumber][
                      1]) / 2
 
-            if points[(j+1) % pointNumber][0] < points[(j+2) % pointNumber][0]:
+            if points[(j+1) % pointNumber][0] > points[(j+2) % pointNumber][0]:
                 nFrameMode = 0
             else :
                 nFrameMode = 1
@@ -70,13 +81,9 @@ def draw_curve_player():
 
 while running:
     clear_canvas()
-    # imgBackGround.draw(100, 100)
-
-    imgBackGround.clip_draw(0, 0, KPU_WIDTH, KPU_HEIGHT,
-                            KPU_WIDTH / 2, KPU_HEIGHT / 2, 1280, 1024)
     update_canvas()
     draw_curve_player()
-
+    handle_events()
     delay(0.01)
 
 close_canvas()
