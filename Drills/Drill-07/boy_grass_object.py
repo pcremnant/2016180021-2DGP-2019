@@ -19,7 +19,7 @@ class Boy:
 
     def update(self):
         self.frame = (self.frame + 1) % 8
-        if self.x > 700:
+        if self.x > 750:
             pass
         else:
             self.x += 5
@@ -39,10 +39,16 @@ class Ball:
         self.speed = random.randint(3, 7)
 
     def update(self):
-        if self.y >= 50:
-            self.y -= self.speed
-        elif self.y < 50:
-            pass
+        if self.type % 2 == 0:
+            if self.y >= 71:
+                self.y -= self.speed
+            elif self.y < 71:
+                pass
+        else:
+            if self.y >= 81:
+                self.y -= self.speed
+            elif self.y < 81:
+                pass
 
     def draw(self):
         self.image.draw(self.x, self.y)
