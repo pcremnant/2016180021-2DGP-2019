@@ -27,6 +27,16 @@ class Boy:
         self.x = random.randint(100, 700)
 
 
+class Ball:
+    def __init__(self, t):
+        self.x, self.y = random.randint(100, 700), 599
+        if t % 2 == 0:
+            self.image = load_image("ball21x21.png")
+        else:
+            self.image = load_image("ball42x42.png")
+
+
+
 def handle_events():
     global running
     global boys
