@@ -19,6 +19,10 @@ class Boy:
 
     def update(self):
         self.frame = (self.frame + 1) % 8
+        if self.x > 700:
+            pass
+        else:
+            self.x += 5
 
     def draw(self):
         self.image.clip_draw(self.frame * 100, 0, 100, 100, self.x, self.y)
@@ -27,16 +31,18 @@ class Boy:
 class Ball:
     def __init__(self, t):
         self.x, self.y = random.randint(100, 700), 599
+        self.type = t
         if t % 2 == 0:
             self.image = load_image("ball21x21.png")
         else:
             self.image = load_image("ball41x41.png")
+        self.speed = random.randint(3, 7)
 
     def update(self):
-        if self.y>=30:
-            self.y -= 5
-        elif self.y<30:
-            self.y = 30
+        if self.y >= 50:
+            self.y -= self.speed
+        elif self.y < 50:
+            pass
 
     def draw(self):
         self.image.draw(self.x, self.y)
@@ -51,6 +57,7 @@ def handle_events():
             running = False
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             running = False
+
 
 # initialization code
 open_canvas()
