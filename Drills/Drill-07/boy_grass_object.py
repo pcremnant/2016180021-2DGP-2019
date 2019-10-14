@@ -35,6 +35,11 @@ class Ball:
         else:
             self.image = load_image("ball42x42.png")
 
+    def update(self):
+        pass
+
+    def draw(self):
+        self.draw()
 
 
 def handle_events():
@@ -54,6 +59,8 @@ def handle_events():
 # initialization code
 open_canvas()
 boys = [Boy() for i in range(11)]
+balls = [Ball(random.randint(1, 2)) for i in range(20)]
+
 grass = Grass()
 running = True
 # game main loop code
