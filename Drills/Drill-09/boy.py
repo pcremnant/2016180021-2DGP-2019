@@ -105,6 +105,7 @@ class SleepState:
             boy.image.clip_composite_draw(boy.frame * 100, 200, 100, 100, 3.141592 / 2,
                                           ' ', boy.x + 25, boy.y - 25, 100, 100)
 
+
 class DashState:
     @staticmethod
     def enter(boy, event):
@@ -117,10 +118,16 @@ class DashState:
     @staticmethod
     def do(boy):
         boy.frame = (boy.frame + 1) % 8
+        boy.timer -= 1
+        boy.x += boy.velocity * 3
+        boy.x = clamp(25, boy.x, 800 - 25)
 
     @staticmethod
     def draw(boy):
-        if boy.dir == 1:
+        if boy.velocity == 1:
+            boy.image.clip_draw(boy.frame * 100, 100, 100, 100, boy.x, boy.y)
+        else:
+            boy.image.clip_draw(boy.frame * 100, 0, 100, 100, boy.x, boy.y)
 
 
 next_state_table = {
@@ -128,9 +135,14 @@ next_state_table = {
                 RIGHT_DOWN: RunState, LEFT_DOWN: RunState,
                 SLEEP_TIMER: SleepState},
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState,
-               LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState},
+               LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState,
+               SHIFT_UP: DashState, SHIFT_DOWN: DashState},
     SleepState: {LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
-                 LEFT_UP: RunState, RIGHT_UP: RunState}
+                 LEFT_UP: RunState, RIGHT_UP: RunState,
+                 SHIFT_UP: DashState, SHIFT_DOWN: DashState},
+    DashState: {RIGHT_UP: IdleState, LEFT_UP: IdleState,
+                RIGHT_DOWN: IdleState, LEFT_DOWN: IdleState,
+                SHIFT_DOWN: IdleState, SHIFT_UP: RunState}
     # fill here
 }
 
@@ -155,7 +167,7 @@ class Boy:
             event = self.event_que.pop()
             self.cur_state.exit(self, event)
             self.cur_state = next_state_table[self.cur_state][event]
-            self.cur_state.enter(self.event)
+            self.cur_state.enter(self, event)
 
     def change_state(self, state):
         # fill here
