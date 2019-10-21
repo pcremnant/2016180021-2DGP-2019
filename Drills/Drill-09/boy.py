@@ -2,17 +2,17 @@ from pico2d import *
 
 # Boy Event
 # fill here
-RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, SHIFT_DOWN, SHIFT_UP, SLEEP_TIMER = range(7)
+RIGHT_DOWN, LEFT_DOWN, SHIFT_DOWN, RIGHT_UP, LEFT_UP, SHIFT_UP, SLEEP_TIMER = range(7)
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
     (SDL_KEYDOWN, SDLK_LEFT): LEFT_DOWN,
+    (SDL_KEYDOWN, SDLK_RSHIFT): SHIFT_DOWN,
+    (SDL_KEYDOWN, SDLK_LSHIFT): SHIFT_DOWN,
     (SDL_KEYUP, SDLK_RIGHT): RIGHT_UP,
     (SDL_KEYUP, SDLK_LEFT): LEFT_UP,
-    (SDL_KEYDOWN, SDLK_LSHIFT): SHIFT_DOWN,
-    (SDL_KEYDOWN, SDLK_RSHIFT): SHIFT_DOWN,
-    (SDL_KEYUP, SDLK_LSHIFT): SHIFT_UP,
-    (SDL_KEYUP, SDLK_RSHIFT): SHIFT_UP
+    (SDL_KEYUP, SDLK_RSHIFT): SHIFT_UP,
+    (SDL_KEYUP, SDLK_LSHIFT): SHIFT_UP
 }
 
 
@@ -106,43 +106,14 @@ class SleepState:
                                           ' ', boy.x + 25, boy.y - 25, 100, 100)
 
 
-class DashState:
-    @staticmethod
-    def enter(boy, event):
-        boy.frame = 0
-
-    @staticmethod
-    def exit(boy, event):
-        pass
-
-    @staticmethod
-    def do(boy):
-        boy.frame = (boy.frame + 1) % 8
-        boy.timer -= 1
-        boy.x += boy.velocity * 3
-        boy.x = clamp(25, boy.x, 800 - 25)
-
-    @staticmethod
-    def draw(boy):
-        if boy.velocity == 1:
-            boy.image.clip_draw(boy.frame * 100, 100, 100, 100, boy.x, boy.y)
-        else:
-            boy.image.clip_draw(boy.frame * 100, 0, 100, 100, boy.x, boy.y)
-
-
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState,
                 RIGHT_DOWN: RunState, LEFT_DOWN: RunState,
                 SLEEP_TIMER: SleepState},
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState,
-               LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState,
-               SHIFT_UP: DashState, SHIFT_DOWN: DashState},
+               LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState},
     SleepState: {LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
-                 LEFT_UP: RunState, RIGHT_UP: RunState,
-                 SHIFT_UP: DashState, SHIFT_DOWN: DashState},
-    DashState: {RIGHT_UP: IdleState, LEFT_UP: IdleState,
-                RIGHT_DOWN: IdleState, LEFT_DOWN: IdleState,
-                SHIFT_DOWN: IdleState, SHIFT_UP: RunState}
+                 LEFT_UP: RunState, RIGHT_UP: RunState}
     # fill here
 }
 
@@ -154,6 +125,7 @@ class Boy:
         self.image = load_image('animation_sheet.png')
         self.dir = 1
         self.velocity = 0
+        self.speed = 0
         self.frame = 0
         self.timer = 0
         self.event_que = []
@@ -167,7 +139,7 @@ class Boy:
             event = self.event_que.pop()
             self.cur_state.exit(self, event)
             self.cur_state = next_state_table[self.cur_state][event]
-            self.cur_state.enter(self, event)
+            self.cur_state.enter(self.event)
 
     def change_state(self, state):
         # fill here
