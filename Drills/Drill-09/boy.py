@@ -60,14 +60,20 @@ class RunState:
     def enter(boy, event):
         if event == RIGHT_DOWN:
             boy.velocity += 1
+            if boy.speed == 0:
+                boy.speed = 1
         elif event == LEFT_DOWN:
             boy.velocity -= 1
+            if boy.speed == 0:
+                boy.speed = 1
         elif event == RIGHT_UP:
             boy.velocity -= 1
         elif event == LEFT_UP:
             boy.velocity += 1
         elif event == SHIFT_UP:
             boy.speed = 1
+        elif event == SHIFT_DOWN:
+            boy.speed = 3
         boy.dir = boy.velocity
 
     @staticmethod
