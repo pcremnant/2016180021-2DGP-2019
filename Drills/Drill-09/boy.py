@@ -28,6 +28,10 @@ class IdleState:
             boy.velocity -= 1
         elif event == LEFT_UP:
             boy.velocity += 1
+        elif event == SHIFT_DOWN:
+            boy.speed = 3
+        elif event == SHIFT_UP:
+            boy.speed = 1
         boy.timer = 1000
 
     @staticmethod
@@ -62,6 +66,8 @@ class RunState:
             boy.velocity -= 1
         elif event == LEFT_UP:
             boy.velocity += 1
+        elif event == SHIFT_UP:
+            boy.speed = 1
         boy.dir = boy.velocity
 
     @staticmethod
@@ -72,7 +78,43 @@ class RunState:
     def do(boy):
         boy.frame = (boy.frame + 1) % 8
         boy.timer -= 1
-        boy.x += boy.velocity
+        boy.x += boy.velocity* boy.speed
+        boy.x = clamp(25, boy.x, 800 - 25)
+
+    @staticmethod
+    def draw(boy):
+        if boy.velocity == 1:
+            boy.image.clip_draw(boy.frame * 100, 100, 100, 100, boy.x, boy.y)
+        else:
+            boy.image.clip_draw(boy.frame * 100, 0, 100, 100, boy.x, boy.y)
+
+
+class DashState:
+    @staticmethod
+    def enter(boy, event):
+        if event == RIGHT_DOWN:
+            boy.velocity += 1
+        elif event == LEFT_DOWN:
+            boy.velocity -= 1
+        elif event == RIGHT_UP:
+            boy.velocity -= 1
+        elif event == LEFT_UP:
+            boy.velocity += 1
+        elif event == SHIFT_UP:
+            boy.speed = 1
+        elif event == SHIFT_DOWN:
+            boy.speed = 3
+        boy.dir = boy.velocity
+
+    @staticmethod
+    def exit(boy, event):
+        pass
+
+    @staticmethod
+    def do(boy):
+        boy.frame = (boy.frame + 1) % 8
+        boy.timer -= 1
+        boy.x += boy.velocity * boy.speed
         boy.x = clamp(25, boy.x, 800 - 25)
 
     @staticmethod
@@ -107,13 +149,15 @@ class SleepState:
 
 
 next_state_table = {
-    IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState,
-                RIGHT_DOWN: RunState, LEFT_DOWN: RunState,
+    IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, SHIFT_UP: IdleState,
+                RIGHT_DOWN: RunState, LEFT_DOWN: RunState, SHIFT_DOWN: IdleState,
                 SLEEP_TIMER: SleepState},
-    RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState,
-               LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState},
-    SleepState: {LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
-                 LEFT_UP: RunState, RIGHT_UP: RunState}
+    RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, SHIFT_UP: RunState,
+               LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState, SHIFT_DOWN: DashState},
+    SleepState: {LEFT_DOWN: RunState, RIGHT_DOWN: RunState, SHIFT_DOWN: DashState,
+                 LEFT_UP: RunState, RIGHT_UP: RunState, SHIFT_UP: IdleState},
+    DashState: {RIGHT_DOWN: DashState, LEFT_DOWN: DashState, SHIFT_DOWN: DashState,
+                RIGHT_UP: RunState, LEFT_UP: RunState, SHIFT_UP: RunState}
     # fill here
 }
 
