@@ -2,7 +2,7 @@ from pico2d import *
 
 # Boy Event
 # fill here
-RIGHT_DOWN, LEFT_DOWN, SHIFT_DOWN, RIGHT_UP, LEFT_UP, SHIFT_UP, SLEEP_TIMER = range(7)
+RIGHT_DOWN, LEFT_DOWN, SHIFT_DOWN, RIGHT_UP, LEFT_UP, SHIFT_UP, SLEEP_TIMER, DASH_TIMER = range(8)
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
@@ -29,9 +29,9 @@ class IdleState:
         elif event == LEFT_UP:
             boy.velocity += 1
         elif event == SHIFT_DOWN:
-            boy.speed = 3
+            boy.speed = 0.3
         elif event == SHIFT_UP:
-            boy.speed = 1
+            boy.speed = 0.1
         boy.timer = 1000
 
     @staticmethod
@@ -61,19 +61,21 @@ class RunState:
         if event == RIGHT_DOWN:
             boy.velocity += 1
             if boy.speed == 0:
-                boy.speed = 1
+                boy.speed = 0.1
         elif event == LEFT_DOWN:
             boy.velocity -= 1
             if boy.speed == 0:
-                boy.speed = 1
+                boy.speed = 0.1
         elif event == RIGHT_UP:
             boy.velocity -= 1
         elif event == LEFT_UP:
             boy.velocity += 1
         elif event == SHIFT_UP:
-            boy.speed = 1
+            boy.speed = 0.1
         elif event == SHIFT_DOWN:
-            boy.speed = 3
+            boy.speed = 0.3
+        elif event == DASH_TIMER:
+            boy.speed = 0.1
         boy.dir = boy.velocity
 
     @staticmethod
@@ -84,7 +86,7 @@ class RunState:
     def do(boy):
         boy.frame = (boy.frame + 1) % 8
         boy.timer -= 1
-        boy.x += boy.velocity* boy.speed
+        boy.x += boy.velocity * boy.speed
         boy.x = clamp(25, boy.x, 800 - 25)
 
     @staticmethod
@@ -107,10 +109,11 @@ class DashState:
         elif event == LEFT_UP:
             boy.velocity += 1
         elif event == SHIFT_UP:
-            boy.speed = 1
+            boy.speed = 0.1
         elif event == SHIFT_DOWN:
-            boy.speed = 3
+            boy.speed = 0.3
         boy.dir = boy.velocity
+        boy.timer = 1000
 
     @staticmethod
     def exit(boy, event):
@@ -122,6 +125,8 @@ class DashState:
         boy.timer -= 1
         boy.x += boy.velocity * boy.speed
         boy.x = clamp(25, boy.x, 800 - 25)
+        if boy.timer <= 0:
+            boy.add_event(DASH_TIMER)
 
     @staticmethod
     def draw(boy):
@@ -163,7 +168,8 @@ next_state_table = {
     SleepState: {LEFT_DOWN: RunState, RIGHT_DOWN: RunState, SHIFT_DOWN: DashState,
                  LEFT_UP: RunState, RIGHT_UP: RunState, SHIFT_UP: IdleState},
     DashState: {RIGHT_DOWN: DashState, LEFT_DOWN: DashState, SHIFT_DOWN: DashState,
-                RIGHT_UP: RunState, LEFT_UP: RunState, SHIFT_UP: RunState}
+                RIGHT_UP: RunState, LEFT_UP: RunState, SHIFT_UP: RunState,
+                DASH_TIMER: RunState}
     # fill here
 }
 
