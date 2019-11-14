@@ -127,7 +127,7 @@ class JumpState:
     @staticmethod
     def enter(boy, event):
         if boy.is_jumping is False:
-            boy.frame = 0
+            # boy.frame = 0
             boy.is_jumping = True
             boy.falling_speed = 800
             boy.y += boy.falling_speed * game_framework.frame_time
@@ -149,13 +149,13 @@ class JumpState:
 
 
 next_state_table = {
-    IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState,
+    IdleState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState,
                 SLEEP_TIMER: SleepState, SPACE: JumpState, COLLISION: IdleState},
-    RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState,
-               RIGHT_DOWN: IdleState, SPACE: JumpState, COLLISION: RunState},
+    RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: RunState,
+               RIGHT_DOWN: RunState, SPACE: JumpState, COLLISION: RunState},
     SleepState: {LEFT_DOWN: RunState, RIGHT_DOWN: RunState, LEFT_UP: RunState,
                  RIGHT_UP: RunState, SPACE: JumpState, COLLISION: SleepState},
-    JumpState: {RIGHT_UP: JumpState, LEFT_UP: JumpState, RIGHT_DOWN: JumpState, LEFT_DOWN: JumpState,
+    JumpState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState,
                 SPACE: JumpState, COLLISION: IdleState}
 
 }

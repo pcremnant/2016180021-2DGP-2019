@@ -78,23 +78,38 @@ def update():
         game_object.update()
     if collide(boy, grass):
         boy.collide_floor()
-        # boy.add_event(COLLISION)
+    elif collide(boy, block):
+        if boy.y - 40 < block.y + 20:
+            boy.x += block.get_direction() * block.get_speed() * game_framework.frame_time
+        else:
+            # collide with floor
+            boy.collide_floor()
+            boy.x += block.get_direction() * block.get_speed() * game_framework.frame_time
+    else:
+        boy.is_jumping = True
+
     for ball in balls:
         if collide(boy, ball):
             balls.remove(ball)
             game_world.remove_object(ball)
             print("COLLISION")
-        elif collide(block, ball):
-            print('COLLISION BAR')
-    for ball in balls:
-        if collide(grass, ball):
+        elif collide(grass, ball):
             ball.stop()
         elif collide(block, ball):
-            if ball.y-10 < block.y + 20:
+            if ball.y - 10 < block.y + 20:
                 ball.x += block.get_direction() * block.get_speed() * game_framework.frame_time
             else:
                 ball.stop()
                 ball.x += block.get_direction() * block.get_speed() * game_framework.frame_time
+    # for ball in balls:
+    #     if collide(grass, ball):
+    #         ball.stop()
+    #     elif collide(block, ball):
+    #         if ball.y-10 < block.y + 20:
+    #             ball.x += block.get_direction() * block.get_speed() * game_framework.frame_time
+    #         else:
+    #             ball.stop()
+    #             ball.x += block.get_direction() * block.get_speed() * game_framework.frame_time
 
     # fill here for collision check
 
