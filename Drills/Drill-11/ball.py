@@ -53,9 +53,9 @@ class BlockBar:
     def __init__(self):
         if BlockBar.image is None:
             BlockBar.image = load_image('brick180x40.png')
-        self.x, self.y = 0, 200
+        self.x, self.y = 100, 200
         self.direction = BlockBar.DIRECTION_RIGHT
-        self.move_speed = 5
+        self.move_speed = 200
 
     def get_bb(self):
         return self.x - 90, self.y - 20, self.x + 90, self.y + 20
@@ -66,8 +66,14 @@ class BlockBar:
         # fill here for draw
 
     def update(self):
-        if self.x + 90 >= 1600:
+        if self.x + 150 >= 1600:
             self.direction = BlockBar.DIRECTION_LEFT
         elif self.x - 90 <= 0:
             self.direction = BlockBar.DIRECTION_RIGHT
-        self.x = self.direction * self.move_speed * game_framework.frame_time
+        self.x += self.direction * self.move_speed * game_framework.frame_time
+
+    def get_direction(self):
+        return self.direction
+
+    def get_speed(self):
+        return self.move_speed

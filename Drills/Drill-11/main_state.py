@@ -87,7 +87,11 @@ def update():
         if collide(grass, ball):
             ball.stop()
         elif collide(block, ball):
-            ball.stop()
+            if ball.y-10 < block.y + 20:
+                ball.x += block.get_direction() * block.get_speed() * game_framework.frame_time
+            else:
+                ball.stop()
+                ball.x += block.get_direction() * block.get_speed() * game_framework.frame_time
 
     # fill here for collision check
 
