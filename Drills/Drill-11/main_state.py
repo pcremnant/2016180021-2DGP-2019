@@ -8,7 +8,7 @@ import game_world
 
 from boy import Boy
 from grass import Grass
-from ball import Ball, BigBall
+from ball import Ball, BigBall, BlockBar
 
 name = "MainState"
 
@@ -16,6 +16,7 @@ boy = None
 grass = None
 balls = []
 big_balls = []
+block = None
 
 
 def collide(a, b):
@@ -42,6 +43,10 @@ def enter():
     global balls
     balls = [Ball() for i in range(10)] + [BigBall() for i in range(10)]
     game_world.add_objects(balls, 1)
+
+    global block
+    block = BlockBar()
+    game_world.add_object(block, 1)
     # fill here for balls
 
 
@@ -76,11 +81,14 @@ def update():
             balls.remove(ball)
             game_world.remove_object(ball)
             print("COLLISION")
+        elif collide(block, ball):
+            print('COLLISION BAR')
     for ball in balls:
         if collide(grass, ball):
             ball.stop()
+        elif collide(block, ball):
+            ball.stop()
 
-    delay(0.9)
     # fill here for collision check
 
 
