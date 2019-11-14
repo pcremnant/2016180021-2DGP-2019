@@ -28,6 +28,7 @@ class Ball:
         self.fall_speed = 0
     # fill here for def stop
 
+
 # fill here
 class BigBall(Ball):
     MIN_FALL_SPEED = 50
@@ -35,10 +36,24 @@ class BigBall(Ball):
     image = None
 
     def __init__(self):
-        if BigBall.image == None:
+        if BigBall.image is None:
             BigBall.image = load_image('ball41x41.png')
-        self.x, self.y = random.randint(0, 1600-1), 500
+        self.x, self.y = random.randint(0, 1600 - 1), 500
         self.fall_speed = random.randint(BigBall.MIN_FALL_SPEED, BigBall.MAX_FALL_SPEED)
 
     def get_bb(self):
-        return self.x - 20, self.y - 20, self.x + 20, self.y +20
+        return self.x - 20, self.y - 20, self.x + 20, self.y + 20
+
+
+class BlockBar:
+    image = None
+    DIRECTION_LEFT = -1
+    DIRECTION_RIGHT = 1
+
+    def __init__(self):
+        if BlockBar.image is None:
+            image = load_image('brick180x40.png')
+        self.x, self.y = 0, 200
+        self.direction = BlockBar.DIRECTION_RIGHT
+
+    def get_bb
