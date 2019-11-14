@@ -2,13 +2,14 @@ from pico2d import *
 
 # Boy Event
 # fill here
-RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, SLEEP_TIMER = range(5)
+RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, SLEEP_TIMER, SPACE = range(6)
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
     (SDL_KEYDOWN, SDLK_LEFT): LEFT_DOWN,
     (SDL_KEYUP, SDLK_RIGHT): RIGHT_UP,
-    (SDL_KEYUP, SDLK_LEFT): LEFT_UP
+    (SDL_KEYUP, SDLK_LEFT): LEFT_UP,
+    (SDL_KEYDOWN, SDLK_SPACE): SPACE
 }
 
 
@@ -28,6 +29,8 @@ class IdleState:
 
     @staticmethod
     def exit(boy, event):
+        if event == SPACE:
+            boy.fire_ball()
         pass
 
     @staticmethod
@@ -62,6 +65,8 @@ class RunState:
 
     @staticmethod
     def exit(boy, event):
+        if event == SPACE:
+            boy.fire_ball()
         pass
 
     @staticmethod
@@ -105,11 +110,13 @@ class SleepState:
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState,
                 RIGHT_DOWN: RunState, LEFT_DOWN: RunState,
-                SLEEP_TIMER: SleepState},
+                SLEEP_TIMER: SleepState, SPACE: IdleState},
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState,
-               LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState},
+               LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState,
+               SPACE: RunState},
     SleepState: {LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
-                 LEFT_UP: RunState, RIGHT_UP: RunState}
+                 LEFT_UP: RunState, RIGHT_UP: RunState,
+                 SPACE: IdleState}
     # fill here
 }
 
@@ -166,3 +173,6 @@ class Boy:
             self.add_event(key_event)
         # fill here
         pass
+
+    def fire_ball(self):
+        print('FIRE BALL')
