@@ -53,7 +53,7 @@ class BlockBar:
     def __init__(self):
         if BlockBar.image is None:
             BlockBar.image = load_image('brick180x40.png')
-        self.x, self.y = 100, 200
+        self.x, self.y = 100, 100
         self.direction = BlockBar.DIRECTION_RIGHT
         self.move_speed = 200
 

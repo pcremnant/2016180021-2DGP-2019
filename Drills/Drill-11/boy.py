@@ -129,7 +129,7 @@ class JumpState:
         if boy.is_jumping is False:
             # boy.frame = 0
             boy.is_jumping = True
-            boy.falling_speed = 800
+            boy.falling_speed = 1000
             boy.y += boy.falling_speed * game_framework.frame_time
 
     @staticmethod
