@@ -76,6 +76,9 @@ def handle_events():
 def update():
     for game_object in game_world.all_objects():
         game_object.update()
+    if collide(boy, grass):
+        boy.collide_floor()
+        # boy.add_event(COLLISION)
     for ball in balls:
         if collide(boy, ball):
             balls.remove(ball)
