@@ -105,6 +105,30 @@ class Zombie:
         # fill here
         pass
 
+    def find_BigBall(self):
+        pass
+
+    def move_to_BigBall(self):
+        pass
+
+    def eat_BigBall(self):
+        pass
+
+    def find_SmallBall(self):
+        pass
+
+    def move_to_SmallBall(self):
+        pass
+
+    def eat_SmallBall(self):
+        pass
+
+    def find_player(self):
+        pass
+
+    def move_to_player(self):
+        pass
+
     def build_behavior_tree(self):
         wander_node = LeafNode("Wander", self.wander)
 

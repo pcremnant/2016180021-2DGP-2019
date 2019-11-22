@@ -30,6 +30,7 @@ class BigBall(Ball):
         self.width = 41
         self.height = 41
         self.hp = 100
+        self.type = 'big'
 
     def draw(self):
         draw_rectangle(*self.get_bb())
@@ -49,6 +50,7 @@ class SmallBall(Ball):
         self.width = 21
         self.height = 21
         self.hp = 50
+        self.type = 'small'
 
     def draw(self):
         draw_rectangle(*self.get_bb())
