@@ -1,5 +1,6 @@
 import game_framework
 from pico2d import *
+import random
 
 import game_world
 
@@ -14,8 +15,6 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
-
-
 
 # Boy Event
 RIGHTKEY_DOWN, LEFTKEY_DOWN, UPKEY_DOWN, DOWNKEY_DOWN, RIGHTKEY_UP, LEFTKEY_UP, UPKEY_UP, DOWNKEY_UP, SPACE = range(9)
@@ -57,8 +56,6 @@ class WalkingState:
         elif event == DOWNKEY_UP:
             boy.y_velocity += RUN_SPEED_PPS
 
-
-
     @staticmethod
     def exit(boy, event):
         pass
@@ -95,9 +92,11 @@ class WalkingState:
 
 
 next_state_table = {
-    WalkingState: {RIGHTKEY_UP: WalkingState, LEFTKEY_UP: WalkingState, RIGHTKEY_DOWN: WalkingState, LEFTKEY_DOWN: WalkingState,
-                UPKEY_UP: WalkingState, UPKEY_DOWN: WalkingState, DOWNKEY_UP: WalkingState, DOWNKEY_DOWN: WalkingState,
-                SPACE: WalkingState}
+    WalkingState: {RIGHTKEY_UP: WalkingState, LEFTKEY_UP: WalkingState, RIGHTKEY_DOWN: WalkingState,
+                   LEFTKEY_DOWN: WalkingState,
+                   UPKEY_UP: WalkingState, UPKEY_DOWN: WalkingState, DOWNKEY_UP: WalkingState,
+                   DOWNKEY_DOWN: WalkingState,
+                   SPACE: WalkingState}
 }
 
 
@@ -119,7 +118,6 @@ class Boy:
         # fill here
         return self.x - 50, self.y - 50, self.x + 50, self.y + 50
 
-
     def add_event(self, event):
         self.event_que.insert(0, event)
 
@@ -134,12 +132,27 @@ class Boy:
     def draw(self):
         self.cur_state.draw(self)
         self.font.draw(self.x - 60, self.y + 50, '(Time: %3.2f)' % get_time(), (255, 255, 0))
-        #fill here
+        # fill here
         draw_rectangle(*self.get_bb())
-        #debug_print('Velocity :' + str(self.velocity) + '  Dir:' + str(self.dir) + ' Frame Time:' + str(game_framework.frame_time))
+        # debug_print('Velocity :' + str(self.velocity) + '  Dir:' + str(self.dir) + ' Frame Time:' + str(
+        # game_framework.frame_time))
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
 
+
+class Ball:
+    image = None
+
+    def __init__(self):
+        self.x = random.randint(0, 1024)
+        self.y = random.randint(0, 768)
+        pass
+
+    def draw(self):
+        pass
+
+    def get_bb(self):
+        pass

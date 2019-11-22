@@ -117,15 +117,6 @@ class Zombie:
         wander_chase_node = SelectorNode("WanderChase")
         wander_chase_node.add_children(chase_node, wander_node)
         self.bt = BehaviorTree(wander_chase_node)
-
-        # get_next_position_node = LeafNode("Get Next Position", self.get_next_position)
-        # move_to_target_node = LeafNode("Move To Target", self.move_to_target)
-        # patrol_node = SequenceNode("Patrol")
-        # patrol_node.add_children(get_next_position_node, move_to_target_node)
-        # self.bt = BehaviorTree(patrol_node)
-
-        # self.bt = BehaviorTree(wander_node)
-        # fill here
         pass
 
     def get_bb(self):
