@@ -165,17 +165,72 @@ class Zombie:
                 big_balls += [ball]
 
         for ball in big_balls:
-            if main_state.collide(self, ball):
+            if main_state.collide(main_state.get_zombie(), ball):
                 ball.is_delete = True
         pass
 
     def find_SmallBall(self):
-        pass
+        balls = main_state.get_balls()
+
+        if balls is None:
+            return BehaviorTree.FAIL
+
+        Small_balls = []
+        is_SmallBall = False
+        for ball in balls:
+            if ball.type == 'small':
+                is_SmallBall = True
+                Small_balls += [ball]
+        if not is_SmallBall:
+            return BehaviorTree.FAIL
+
+        distance = []
+        for ball in Small_balls:
+            distance += [(self.x - ball.x) ** 2 + (self.y - ball.y) ** 2]
+        count = 0
+        min_distance = None
+        min_index = 0
+        for d in distance:
+            if min_distance is None:
+                min_distance = d
+                min_index = count
+            elif d < min_distance:
+                min_index = count
+                min_distance = d
+            count += 1
+
+        self.target_x, self.target_y = Small_balls[min_index].x, Small_balls[min_index].y
+        self.dir = math.atan2(self.target_y - self.y, self.target_x - self.x)
+
+        return BehaviorTree.SUCCESS
 
     def move_to_SmallBall(self):
+        self.speed = RUN_SPEED_PPS
+        self.calculate_current_position()
+
+        distance = (self.target_x - self.x) ** 2 + (self.target_y - self.y) ** 2
+
+        if distance < PIXEL_PER_METER ** 2:
+            return BehaviorTree.SUCCESS
+        else:
+            return BehaviorTree.RUNNING
+        # fill here
         pass
 
     def eat_SmallBall(self):
+        balls = main_state.get_balls()
+
+        if balls is None:
+            return BehaviorTree.FAIL
+
+        small_balls = []
+        for ball in balls:
+            if ball.type == 'small':
+                small_balls += [ball]
+
+        for ball in small_balls:
+            if main_state.collide(main_state.get_zombie(), ball):
+                ball.is_delete = True
         pass
 
     # def find_player(self):
@@ -198,12 +253,23 @@ class Zombie:
 
         find_BigBall_node = LeafNode("Find BigBall", self.find_BigBall)
         move_to_BigBall_node = LeafNode("Move to BigBall", self.move_to_BigBall)
+        eat_BigBall_node = LeafNode("Eat BigBall", self.eat_BigBall)
+
+        find_SmallBall_node = LeafNode("Find SmallBall", self.find_SmallBall)
+        move_to_SmallBall_node = LeafNode("Move to SmallBall", self.move_to_SmallBall)
+        eat_SmallBall_node = LeafNode("Eat SmallBall", self.eat_SmallBall)
 
         chase_BigBall_node = SequenceNode("Chase BigBall")
-        chase_BigBall_node.add_children(find_BigBall_node, move_to_BigBall_node)
+        chase_BigBall_node.add_children(find_BigBall_node, move_to_BigBall_node, eat_BigBall_node)
+
+        chase_SmallBall_node = SequenceNode("Chase SmallBall")
+        chase_SmallBall_node.add_children(find_SmallBall_node, move_to_SmallBall_node, eat_SmallBall_node)
+
+        eat_ball_node = SelectorNode("Eat Balls")
+        eat_ball_node.add_children(chase_BigBall_node, chase_SmallBall_node)
 
         # self.bt = BehaviorTree(wander_chase_node)
-        self.bt = BehaviorTree(chase_BigBall_node)
+        self.bt = BehaviorTree(eat_ball_node)
         pass
 
     def get_bb(self):
