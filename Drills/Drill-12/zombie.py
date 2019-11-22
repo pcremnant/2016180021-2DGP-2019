@@ -242,11 +242,11 @@ class Zombie:
     def build_behavior_tree(self):
         # wander_node = LeafNode("Wander", self.wander)
 #
-        # find_player_node = LeafNode("Find Player", self.find_player)
-        # move_to_player_node = LeafNode("Move to Player", self.move_to_player)
+        find_player_node = LeafNode("Find Player", self.find_player)
+        move_to_player_node = LeafNode("Move to Player", self.move_to_player)
 #
-        # chase_node = SequenceNode("Chase")
-        # chase_node.add_children(find_player_node, move_to_player_node)
+        chase_player_node = SequenceNode("Chase Player")
+        chase_player_node.add_children(find_player_node, move_to_player_node)
 #
         # wander_chase_node = SelectorNode("WanderChase")
         # wander_chase_node.add_children(chase_node, wander_node)
@@ -268,8 +268,11 @@ class Zombie:
         eat_ball_node = SelectorNode("Eat Balls")
         eat_ball_node.add_children(chase_BigBall_node, chase_SmallBall_node)
 
+        chase_node = SelectorNode("Chase")
+        chase_node.add_children(eat_ball_node, chase_player_node)
+
         # self.bt = BehaviorTree(wander_chase_node)
-        self.bt = BehaviorTree(eat_ball_node)
+        self.bt = BehaviorTree(chase_node)
         pass
 
     def get_bb(self):
