@@ -46,6 +46,7 @@ class Zombie:
         self.timer = 1.0  # change direction every 1 sec when wandering
         self.frame = 0
         self.build_behavior_tree()
+        self.hp = 0
 
     def calculate_current_position(self):
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % FRAMES_PER_ACTION
@@ -167,6 +168,7 @@ class Zombie:
         for ball in big_balls:
             if main_state.collide(main_state.get_zombie(), ball):
                 ball.is_delete = True
+                self.hp += ball.hp
         pass
 
     def find_SmallBall(self):
@@ -231,6 +233,7 @@ class Zombie:
         for ball in small_balls:
             if main_state.collide(main_state.get_zombie(), ball):
                 ball.is_delete = True
+                self.hp += ball.hp
         pass
 
     # def find_player(self):
@@ -241,13 +244,13 @@ class Zombie:
 
     def build_behavior_tree(self):
         # wander_node = LeafNode("Wander", self.wander)
-#
+        #
         find_player_node = LeafNode("Find Player", self.find_player)
         move_to_player_node = LeafNode("Move to Player", self.move_to_player)
-#
+        #
         chase_player_node = SequenceNode("Chase Player")
         chase_player_node.add_children(find_player_node, move_to_player_node)
-#
+        #
         # wander_chase_node = SelectorNode("WanderChase")
         # wander_chase_node.add_children(chase_node, wander_node)
 
@@ -294,6 +297,8 @@ class Zombie:
                 Zombie.images['Idle'][int(self.frame)].draw(self.x, self.y, 100, 100)
             else:
                 Zombie.images['Walk'][int(self.frame)].draw(self.x, self.y, 100, 100)
+
+        print(self.hp)
 
     def handle_event(self, event):
         pass

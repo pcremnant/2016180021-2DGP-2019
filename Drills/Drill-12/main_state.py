@@ -84,15 +84,20 @@ def handle_events():
 
 
 def update():
+    global zombie
+    global boy
     global balls
     for game_object in game_world.all_objects():
         game_object.update()
     for ball in balls:
         if ball.is_delete:
-            # if collide(zombie, ball):
             balls.remove(ball)
             game_world.remove_object(ball)
-
+    if collide(zombie, boy):
+        if zombie.hp >= 750:
+            game_world.remove_object(boy)
+        else:
+            game_world.remove_object(zombie)
 
 def draw():
     clear_canvas()
