@@ -9,12 +9,13 @@ import game_world
 from boy import Boy
 from ground import Ground
 from zombie import Zombie
-
+from ball import BigBall, SmallBall
 
 name = "MainState"
 
 boy = None
 zombie = None
+balls = None
 
 
 def collide(a, b):
@@ -28,7 +29,6 @@ def collide(a, b):
     if bottom_a > top_b: return False
 
     return True
-
 
 
 def get_boy():
@@ -47,8 +47,14 @@ def enter():
     ground = Ground()
     game_world.add_object(ground, 0)
 
+    global balls
+    balls = [SmallBall() for i in range(5)] + [BigBall() for i in range(5)]
+    game_world.add_objects(balls, 1)
+
+
 def exit():
     game_world.clear()
+
 
 def pause():
     pass
@@ -64,7 +70,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-                game_framework.quit()
+            game_framework.quit()
         else:
             boy.handle_event(event)
 
@@ -79,9 +85,3 @@ def draw():
     for game_object in game_world.all_objects():
         game_object.draw()
     update_canvas()
-
-
-
-
-
-
