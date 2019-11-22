@@ -8,6 +8,7 @@ class Ball:
     def __init__(self):
         self.x = random.randint(0, 1024)
         self.y = random.randint(0, 768)
+        self.is_delete = False
         pass
 
     def draw(self):

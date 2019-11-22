@@ -80,9 +80,13 @@ def handle_events():
 
 
 def update():
+    global balls
     for game_object in game_world.all_objects():
         game_object.update()
-
+    for ball in balls:
+        if collide(zombie, ball):
+            balls.remove(ball)
+            game_world.remove_object(ball)
 
 def draw():
     clear_canvas()

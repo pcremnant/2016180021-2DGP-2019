@@ -154,6 +154,19 @@ class Zombie:
         pass
 
     def eat_BigBall(self):
+        balls = main_state.get_balls()
+
+        if balls is None:
+            return BehaviorTree.FAIL
+
+        big_balls = []
+        for ball in balls:
+            if ball.type == 'big':
+                big_balls += [ball]
+
+        for ball in big_balls:
+            if main_state.collide(self, ball):
+                ball.is_delete = True
         pass
 
     def find_SmallBall(self):
