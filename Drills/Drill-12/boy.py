@@ -144,8 +144,6 @@ class Boy:
 
 
 class Ball:
-    image = None
-
     def __init__(self):
         self.x = random.randint(0, 1024)
         self.y = random.randint(0, 768)
@@ -156,3 +154,41 @@ class Ball:
 
     def get_bb(self):
         pass
+
+
+class BigBall(Ball):
+    image = None
+
+    def __init__(self):
+        super().__init__()
+        if BigBall.image is None:
+            image = load_image('ball41x41.png')
+        self.width = 41
+        self.height = 41
+
+    def draw(self):
+        draw_rectangle(self.x - self.width // 2, self.y - self.height // 2, self.x + self.width // 2,
+                       self.y + self.height // 2)
+        BigBall.draw()
+
+    def get_bb(self):
+        return self.x - self.width // 2, self.y - self.height // 2, self.x + self.width // 2, self.y + self.height // 2
+
+
+class SmallBall(Ball):
+    image = None
+
+    def __init__(self):
+        super().__init__()
+        if BigBall.image is None:
+            image = load_image('ball21x21.png')
+        self.width = 21
+        self.height = 21
+
+    def draw(self):
+        draw_rectangle(self.x - self.width // 2, self.y - self.height // 2, self.x + self.width // 2,
+                       self.y + self.height // 2)
+        BigBall.draw()
+
+    def get_bb(self):
+        return self.x - self.width // 2, self.y - self.height // 2, self.x + self.width // 2, self.y + self.height // 2
